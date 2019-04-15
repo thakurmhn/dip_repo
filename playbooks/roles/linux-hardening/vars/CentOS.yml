@@ -1,0 +1,24 @@
+---
+auditd:
+  log_file: /var/log/audit/audit.log
+  auditd_package: 'audit'
+
+login_defs:
+  mail_dir: /var/spool/mail
+  pass_max_days: 99999
+  pass_min_days: 0
+  pass_min_len: 5
+  pass_warn_age: 7
+  uid_min: 1000
+  uid_max: 6000
+  sys_uid_min: 201
+  sys_uid_max: 999
+  gid_min: 1000
+  gid_max: 6000
+  sys_gid_min: 201
+  sys_gid_max: 999
+  create_home: yes
+  umask: 077
+  usergroups_enab: yes
+  encrypt_method: SHA512
+

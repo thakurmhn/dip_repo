@@ -1,0 +1,53 @@
+- block:
+
+  - name: set OS family dependent variable
+    include_vars: '{{ ansible_os_family }}.yml'
+    tags: always
+
+  - name: OS dependent variables
+    include_vars: '{{ item }}'
+    with_first_found:
+      - files:
+        - '{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml'
+        - '{{ ansible_distribution }}.yml'
+        - '{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.yml'
+        skip: true
+    tags: always
+
+
+  - name: Install Auditd package
+    package:
+      name: '{{ auditd.auditd_package }}'
+      state: present
+
+
+  - name: configure Auditd
+    template:
+      src: 'etc/audit/auditd.conf.j2'
+      dest: '/etc/audit/auditd.conf'
+      owner: root
+      group: root
+      mode: 0640
+      backup: yes
+    notify:
+      - restart auditd
+
+  - name: Configure user limits
+    template: 
+      src: etc/security/limits.conf.j2
+      dest: /etc/security/limits.conf
+      owner: root
+      group: root
+      mode: 0660
+      backup: yes
+
+  - name: Set Login definations
+    template: 
+      src: etc/login.defs.j2
+      dest: /etc/login.defs
+      owner: root
+      group: root
+      mode: 0644
+      backup: yes
+    when: 
+      - (ansible_facts['distribution'] == "CentOS" and ansible_facts['distribution_major_version'] == "7")

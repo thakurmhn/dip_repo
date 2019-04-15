@@ -1,0 +1,6 @@
+---
+# handlers file for linux-hardening
+- name: restart auditd
+  service:
+    name: auditd
+    state: started
