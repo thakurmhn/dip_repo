@@ -1,0 +1,26 @@
+---
+- name: set banner
+  copy:
+    src: issue.net
+    dest: "{{ sshd_banner }}"
+    owner: root
+    group: "{{ sshd_config_group }}"
+
+- name: Configfile openssh-server
+  become: yes
+  template:
+    src: etc/sshd/sshd_config.j2
+    dest: '/etc/ssh/sshd_config'
+    backup: true
+    owner: "{{ sshd_config_owner }}"
+    group: "{{ sshd_config_group }}"
+    mode: 0600
+  notify:
+    - "(Handler: All Linux OSs) Restart sshd"
+
+- name: Start sshd service
+  become: yes
+  service:
+    name: "{{ sshd_service }}"
+    state: started
+    enabled: yes
