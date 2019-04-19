@@ -1,2 +1,92 @@
 ---
+auditd:
+  log_file: /var/log/audit/audit.log
+  auditd_package: 'audit'
+
+login_defs:
+  mail_dir: /var/spool/mail
+  pass_max_days: 99999
+  pass_min_days: 0
+  pass_min_len: 5
+  pass_warn_age: 7
+  uid_min: 1000
+  uid_max: 6000
+  sys_uid_min: 201
+  sys_uid_max: 999
+  gid_min: 1000
+  gid_max: 6000
+  sys_gid_min: 201
+  sys_gid_max: 999
+  create_home: yes
+  umask: 077
+  usergroups_enab: yes
+  encrypt_method: SHA512
+
+
+sshd_service: sshd
+sshd_config: /etc/ssh/sshd_config
+sshd_config_owner: root
+sshd_config_group: root
+sshd_hardening: true
+ssh_hardening: true
+openssh_keys: true
+sshd_port: "22"
+sshd_protocol_version: "2"
+sshd_listening_address:
+  - 0.0.0.0
+sshd_host_key_files: []
+sshd_root_login: "no"
+sshd_kerberos_support: false
+sshd_gssapi_support: false
+sshd_x11_forwarding: "no"
+sshd_agent_forwarding: "no"
+sshd_tcp_forwarding: "no"
+sshd_client_alive_intervale: "300"
+sshd_client_alive_countMax: "2"
+sshd_banner: "/etc/issue.net"
+sshd_pam: "yes"
+sshd_privilege_separation_59: "sandbox"
+sshd_privilege_separation_53: "yes"
+sshd_password_authentification: "yes"
+sshd_max_auth_tries: "5"
+sshd_max_startups: "10:30:100"
+ssh_port: "22"
+ssh_roaming: "no"
+ssh_password_authentification: "no"
+openssh_ciphers: []
+openssh_macs: []
+openssh_kexalgorithms: []
+ciphers_openssh_66:
+  - chacha20-poly1305@openssh.com
+  - aes256-gcm@openssh.com
+  - aes128-gcm@openssh.com
+  - aes256-ctr
+  - aes192-ctr
+  - aes128-ctr
+ciphers_openssh_53:
+  - aes256-ctr
+  - aes192-ctr
+  - aes128-ctr
+macs_openssh_76:
+  - hmac-sha2-512-etm@openssh.com
+  - hmac-sha2-256-etm@openssh.com
+  - umac-128-etm@openssh.com
+  - hmac-sha2-512
+  - hmac-sha2-256
+macs_openssh_66:
+  - hmac-sha2-512-etm@openssh.com
+  - hmac-sha2-256-etm@openssh.com
+  - umac-128-etm@openssh.com
+  - hmac-sha2-512
+  - hmac-sha2-256
+macs_openssh_59:
+  - hmac-sha2-512
+  - hmac-sha2-256
+macs_openssh_53:
+  - hmac-sha1
+kexalgorithms_openssh_66:
+  - curve25519-sha256@libssh.org
+  - diffie-hellman-group-exchange-sha256
+kexalgorithms_openssh_53:
+- diffie-hellman-group-exchange-sha256
 
