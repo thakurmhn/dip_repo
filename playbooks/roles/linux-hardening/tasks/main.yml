@@ -13,7 +13,42 @@
         - '{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.yml'
         skip: true
     tags: always
+  - name: Add group "krisha1" to remote server
+    become: yes
+#    remote_user: root
+    group:
+      name: krisha1
+      gid: 2010 
+      state: present
+  - name: Add user "krisha1" to the remote server
+    become: yes
+#    remote_user: root
+    user:
+      name: krisha1
+      password: $1$SomeSalt$FQ8j8BGQWfkLvglE85Qiu0
+      comment: "Privileged User"
+      uid: 2010
+      group: krisha1
+      append: yes
+      shell: /bin/bash
+      generate_ssh_key: yes
+      ssh_key_bits: 2010
+      ssh_key_file: .ssh/id_rsa
 
+  - name: Add krisha1 user to the sudoers
+    become: yes
+#    remote_user: root
+    copy:
+      dest: "/etc/sudoers.d/krisha1"
+      content: "krisha1  ALL=(ALL)  NOPASSWD: ALL"
+ 
+  - name: Deploy SSH Key
+    become: yes
+#    remote_user: root
+    authorized_key: 
+      user: krisha1
+      key: "{{ lookup('file', '/home/bselinadmin/.ssh/id_rsa.pub') }}"
+      state: present
 
   - name: Install Auditd package
     become: yes
