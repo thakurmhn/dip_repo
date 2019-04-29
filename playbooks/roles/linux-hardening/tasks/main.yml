@@ -13,19 +13,17 @@
         - '{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.yml'
         skip: true
     tags: always
-  - name: Add group "krisha1" to remote server
-    become: yes
-#    remote_user: root
+
+  - name: Add new group  to remote server
     group:
       name: krisha1
       gid: 2010 
       state: present
-  - name: Add user "krisha1" to the remote server
-    become: yes
-#    remote_user: root
+
+  - name: Add previllaged user to the remote server
     user:
-      name: krisha1
-      password: $1$SomeSalt$FQ8j8BGQWfkLvglE85Qiu0
+      name: '{{ previllaged_users.username }}'
+      password: '{{ previllaged_users.password }}'
       comment: "Privileged User"
       uid: 2010
       group: krisha1
@@ -35,30 +33,36 @@
       ssh_key_bits: 2010
       ssh_key_file: .ssh/id_rsa
 
+  - name: Create sudoers file
+    file:
+      path: /etc/sudoers.d/'{{ previllaged_users.username }}'
+      state: touch
+      owner: root
+      group: root
+      mode: 0600
+
   - name: Add krisha1 user to the sudoers
-    become: yes
-#    remote_user: root
-    copy:
-      dest: "/etc/sudoers.d/krisha1"
-      content: "krisha1  ALL=(ALL)  NOPASSWD: ALL"
+    lineinfile:
+      path: /etc/sudoers.d/'{{ previllaged_users.username }}'
+      line: '{{ previllaged_users.username }}  ALL=(ALL)  NOPASSWD: ALL'
+      state: present
+      backup: yes
+      validate: '/usr/sbin/visudo -cf %s'
+      
  
   - name: Deploy SSH Key
-    become: yes
-#    remote_user: root
     authorized_key: 
-      user: krisha1
-      key: "{{ lookup('file', '/home/bselinadmin/.ssh/id_rsa.pub') }}"
+      user: '{{ previllaged_users.username }}'
+      key: "{{ lookup('file', '/home/{{ admin_users.username }}/.ssh/id_rsa.pub') }}"
       state: present
 
   - name: Install Auditd package
-    become: yes
     package:
       name: '{{ auditd.auditd_package }}'
       state: present
 
 
   - name: configure Auditd
-    become: yes
     template:
       src: 'etc/audit/auditd.conf.j2'
       dest: '/etc/audit/auditd.conf'
@@ -70,7 +74,6 @@
       - restart auditd
 
   - name: Configure user limits
-    become: yes
     template: 
       src: etc/security/limits.conf.j2
       dest: /etc/security/limits.conf
@@ -80,7 +83,6 @@
       backup: yes
 
   - name: Set Login definations
-    become: yes
     template: 
       src: etc/login.defs.j2
       dest: /etc/login.defs
@@ -90,6 +92,7 @@
       backup: yes
     when: 
       - (ansible_facts['distribution'] == "CentOS" and ansible_facts['distribution_major_version'] == "7")
+      - (ansible_facts['distribution'] == "RedHat" and ansible_facts['distribution_major_version'] == "7")
 
   - name: get openssh-version
     shell: ssh -V 2>&1 | sed -r 's/.*_([0-9]*\.[0-9]).*/\1/g'
@@ -102,12 +105,4 @@
   - include_tasks: crypto.yml
 
   - include_tasks: sshd.yml
-    when: sshd_hardening
 
-  - include_tasks: ssh.yml
-    when: ssh_hardening
-
-#  - include_tasks: public-keys.yml
-#    when:
-#      - openssh_keys
-#      - public_keys != ""

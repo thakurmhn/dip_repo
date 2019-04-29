@@ -1,0 +1,99 @@
+#####################################
+##                                 ##
+## THIS FILE IS MANAGED BY ANSIBLE ##
+##                                 ##
+#####################################
+
+# Package generated configuration file
+# See the sshd_config(5) manpage for details
+
+Port {{ sshd_port }}
+
+{% for address in sshd_listening_address -%}
+ListenAddress {{ address }}
+{% endfor %}
+
+Protocol {{ sshd_protocol_version }}
+
+PubkeyAuthentication yes
+
+{% for key in sshd_host_key_files -%}
+HostKey {{key}}
+{% endfor %}
+
+### CRYPTOGRAPHY ###
+
+Ciphers {{ openssh_ciphers| join(',') }}
+MACs {{ openssh_macs| join(',') }}
+KexAlgorithms {{ openssh_kexalgorithms| join(',') }}
+
+### SECURITY CONFIGURATION ###
+
+# Logging
+SyslogFacility AUTH
+LogLevel INFO
+
+#Privilege Separation is turned on for security
+
+UsePrivilegeSeparation {% if openssh_version.stdout >= '5.9'-%}{{ sshd_privilege_separation_59 }}{% else %}{{ sshd_privilege_separation_53 }}{% endif %}
+
+# Authentication:
+LoginGraceTime 30
+PermitRootLogin {{ sshd_root_login }}
+StrictModes yes
+
+# Don't use host-based authentication
+IgnoreRhosts yes
+IgnoreUserKnownHosts yes
+HostbasedAuthentication no
+
+# Change to yes to enable challenge-response passwords (beware issues with
+# some PAM modules and threads)
+ChallengeResponseAuthentication no
+UsePAM {{ sshd_pam }}
+
+# Change to no to disable tunnelled clear text passwords
+PasswordAuthentication {{ sshd_password_authentification }}
+PermitEmptyPasswords no
+MaxAuthTries {{ sshd_max_auth_tries }}
+MaxStartups {{ sshd_max_startups }}
+
+{% if sshd_kerberos_support -%}
+# Kerberos options
+KerberosAuthentication yes
+KerberosGetAFSToken no
+KerberosOrLocalPasswd no
+KerberosTicketCleanup yes
+{% endif %}
+
+{% if sshd_gssapi_support -%}
+# GSSAPI options
+GSSAPIAuthentication yes
+GSSAPICleanupCredentials yes
+{% endif %}
+
+X11Forwarding {{ sshd_x11_forwarding }}
+PrintMotd no
+PrintLastLog yes
+TCPKeepAlive no
+
+Banner {{ sshd_banner }}
+
+# Allow client to pass locale environment variables
+AcceptEnv LANG LC_*
+
+AllowAgentForwarding {{ sshd_agent_forwarding }}
+AllowTcpForwarding {{ sshd_tcp_forwarding }}
+
+ClientAliveInterval {{ sshd_client_alive_intervale }}
+ClientAliveCountMax {{ sshd_client_alive_countMax }}
+
+### SFTP CONFIGURATION ###
+
+Subsystem sftp /usr/lib/openssh/sftp-server
+
+# Accept locale-related environment variables
+AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES
+AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
+AcceptEnv LC_IDENTIFICATION LC_ALL LANGUAGE
+AcceptEnv XMODIFIERS
