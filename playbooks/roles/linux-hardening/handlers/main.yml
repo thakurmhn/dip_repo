@@ -4,8 +4,8 @@
   service:
     name: auditd
     state: started
-- name: "(Handler: All Linux OSs) Restart sshd"
-  become: yes
+
+- name: Restart sshd
   service:
     name: "{{ sshd_service }}"
     state: restarted
