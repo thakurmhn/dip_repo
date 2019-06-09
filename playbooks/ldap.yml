@@ -1,0 +1,41 @@
+---
+- hosts: rhel7
+  gather_facts: false
+  become: yes
+  vars:
+    Peripheral: "192.168.252.44, 192.168.252.45"
+    PROD: "192.168.152.22, 192.168.152.26"
+  vars_prompt:
+        prompt: "Enter the enviroment (PROD|Peripheral)"
+        name: "enviroment"
+        default: Peripheral
+        private: no
+        when: enviroment is undefined
+  tasks:
+    - name: "Install a list of packages of openldap"
+      yum:
+       name:
+         - nss-pam-ldapd.x86_64
+         - nss-pam-ldapd
+         - openldap
+         - openldap-clients
+         - nfs-utils
+       state: present
+    - name: "Configure ldap client on {{ Peripheral }}"
+      shell: "authconfig --enableforcelegacy --update"
+      shell: "authconfig --enableldap --enableldapauth --ldapserver={{ Peripheral }} --ldapbasedn=dc=bseindia,dc=com --enableforcelegacy --update"
+#       changed_when: true
+#       register: "Peripheral"
+      when: Enter the enviroment == "Peripheral"
+#      when: enviroment == true
+    - name: "Configure ldap client on {{ PROD }}"
+      shell: "authconfig --enableforcelegacy --update"
+      shell: "authconfig --enableldap --enableldapauth --ldapserver={{ PROD }} --ldapbasedn=dc=bseindia,dc=com --enableforcelegacy --update"
+#      changed_when: false
+#      register: "PROD"
+#      when: enviroment == false
+      when: Enter the enviroment == "PROD"
+    - name: "correct enviroment values"
+      set_fact:
+        Peripheral: "{{ Peripheral.stdout }}"
+        PROD: "{{ PROD.stdout }}"
