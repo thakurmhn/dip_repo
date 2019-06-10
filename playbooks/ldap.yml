@@ -10,7 +10,6 @@
     name: ldap_env
     default: Peripheral
     private: no
-    when: ldap_env is undefined
 
   tasks:
     - name: Install a list of packages of openldap
