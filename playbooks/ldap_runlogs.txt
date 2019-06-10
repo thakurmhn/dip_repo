@@ -1,0 +1,101 @@
+[root@server1 test]# ansible-playbook -i localhost, ldap.yml -e "target=localhost" --check
+Enter the ldap_env (PROD|Peripheral) [Peripheral]: PROD
+
+PLAY [localhost] *******************************************************************************************************************************************************
+
+TASK [Install a list of packages of openldap] **************************************************************************************************************************
+[DEPRECATION WARNING]: Invoking "yum" only once while using a loop via squash_actions is deprecated. Instead of using a loop to supply multiple items and specifying
+`name: "{{ item }}"`, please use `name: ['nss-pam-ldapd.x86_64', 'nss-pam-ldapd', 'openldap', 'openldap-clients', 'nfs-utils']` and remove the loop. This feature will
+be removed in version 2.11. Deprecation warnings can be disabled by setting deprecation_warnings=False in ansible.cfg.
+changed: [localhost] => (item=[u'nss-pam-ldapd.x86_64', u'nss-pam-ldapd', u'openldap', u'openldap-clients', u'nfs-utils'])
+
+TASK [Configure ldap client on Peripheral] *****************************************************************************************************************************
+skipping: [localhost]
+
+TASK [Configure ldap client on PROD] ***********************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "Testing ....PROD PROD"
+}
+
+PLAY RECAP *************************************************************************************************************************************************************
+localhost                  : ok=2    changed=1    unreachable=0    failed=0
+
+[root@server1 test]#
+[root@server1 test]#
+[root@server1 test]#
+[root@server1 test]#
+[root@server1 test]#
+[root@server1 test]# ansible-playbook -i localhost, ldap.yml -e "target=localhost" --check
+Enter the ldap_env (PROD|Peripheral) [Peripheral]: PROD
+
+PLAY [localhost] *******************************************************************************************************************************************************
+
+TASK [Install a list of packages of openldap] **************************************************************************************************************************
+[DEPRECATION WARNING]: Invoking "yum" only once while using a loop via squash_actions is deprecated. Instead of using a loop to supply multiple items and specifying
+`name: "{{ item }}"`, please use `name: ['nss-pam-ldapd.x86_64', 'nss-pam-ldapd', 'openldap', 'openldap-clients', 'nfs-utils']` and remove the loop. This feature will
+be removed in version 2.11. Deprecation warnings can be disabled by setting deprecation_warnings=False in ansible.cfg.
+changed: [localhost] => (item=[u'nss-pam-ldapd.x86_64', u'nss-pam-ldapd', u'openldap', u'openldap-clients', u'nfs-utils'])
+
+TASK [Configure ldap client on Peripheral] *****************************************************************************************************************************
+skipping: [localhost]
+
+TASK [Configure ldap client on PROD] ***********************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "Testing ....PROD PROD"
+}
+
+PLAY RECAP *************************************************************************************************************************************************************
+localhost                  : ok=2    changed=1    unreachable=0    failed=0
+
+[root@server1 test]#
+[root@server1 test]#
+[root@server1 test]# vi ldap.yml
+[root@server1 test]#
+[root@server1 test]#
+[root@server1 test]# ansible-playbook -i localhost, ldap.yml -e "target=localhost"
+Enter the ldap_env (PROD|Peripheral) [Peripheral]:
+
+PLAY [localhost] *******************************************************************************************************************************************************
+
+TASK [Install a list of packages of openldap] **************************************************************************************************************************
+[DEPRECATION WARNING]: Invoking "yum" only once while using a loop via squash_actions is deprecated. Instead of using a loop to supply multiple items and specifying
+`name: "{{ item }}"`, please use `name: ['nss-pam-ldapd.x86_64', 'nss-pam-ldapd', 'openldap', 'openldap-clients', 'nfs-utils']` and remove the loop. This feature will
+be removed in version 2.11. Deprecation warnings can be disabled by setting deprecation_warnings=False in ansible.cfg.
+changed: [localhost] => (item=[u'nss-pam-ldapd.x86_64', u'nss-pam-ldapd', u'openldap', u'openldap-clients', u'nfs-utils'])
+
+TASK [Configure ldap client on Peripheral] *****************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "Testing ...Peripheral Peripheral"
+}
+
+TASK [Configure ldap client on PROD] ***********************************************************************************************************************************
+skipping: [localhost]
+
+PLAY RECAP *************************************************************************************************************************************************************
+localhost                  : ok=2    changed=1    unreachable=0    failed=0
+
+[root@server1 test]#
+[root@server1 test]#
+[root@server1 test]# ansible-playbook -i localhost, ldap.yml -e "target=localhost"
+Enter the ldap_env (PROD|Peripheral) [Peripheral]: PROD
+
+PLAY [localhost] *******************************************************************************************************************************************************
+
+TASK [Install a list of packages of openldap] **************************************************************************************************************************
+[DEPRECATION WARNING]: Invoking "yum" only once while using a loop via squash_actions is deprecated. Instead of using a loop to supply multiple items and specifying
+`name: "{{ item }}"`, please use `name: ['nss-pam-ldapd.x86_64', 'nss-pam-ldapd', 'openldap', 'openldap-clients', 'nfs-utils']` and remove the loop. This feature will
+be removed in version 2.11. Deprecation warnings can be disabled by setting deprecation_warnings=False in ansible.cfg.
+ok: [localhost] => (item=[u'nss-pam-ldapd.x86_64', u'nss-pam-ldapd', u'openldap', u'openldap-clients', u'nfs-utils'])
+
+TASK [Configure ldap client on Peripheral] *****************************************************************************************************************************
+skipping: [localhost]
+
+TASK [Configure ldap client on PROD] ***********************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "Testing ....PROD PROD"
+}
+
+PLAY RECAP *************************************************************************************************************************************************************
+localhost                  : ok=2    changed=0    unreachable=0    failed=0
+
+
